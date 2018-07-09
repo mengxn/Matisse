@@ -20,9 +20,11 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +38,8 @@ import com.zhihu.matisse.engine.impl.GlideEngine;
 import com.zhihu.matisse.engine.impl.PicassoEngine;
 import com.zhihu.matisse.filter.Filter;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
+import com.zhihu.matisse.listener.OnCheckedListener;
+import com.zhihu.matisse.listener.OnSelectedListener;
 
 import java.util.List;
 
@@ -87,7 +91,28 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                                                     getResources().getDimensionPixelSize(R.dimen.grid_expected_size))
                                             .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
                                             .thumbnailScale(0.85f)
-                                            .imageEngine(new GlideEngine())
+                                            // for glide-V3
+//                                            .imageEngine(new GlideEngine())
+                                            // for glide-V4
+                                            .imageEngine(new Glide4Engine())
+                                            .setOnSelectedListener(new OnSelectedListener() {
+                                                @Override
+                                                public void onSelected(
+                                                        @NonNull List<Uri> uriList, @NonNull List<String> pathList) {
+                                                    // DO SOMETHING IMMEDIATELY HERE
+                                                    Log.e("onSelected", "onSelected: pathList=" + pathList);
+
+                                                }
+                                            })
+                                            .originalEnable(true)
+                                            .maxOriginalSize(10)
+                                            .setOnCheckedListener(new OnCheckedListener() {
+                                                @Override
+                                                public void onCheck(boolean isChecked) {
+                                                    // DO SOMETHING IMMEDIATELY HERE
+                                                    Log.e("isChecked", "onCheck: isChecked=" + isChecked);
+                                                }
+                                            })
                                             .forResult(REQUEST_CODE_CHOOSE);
                                     break;
                                 case R.id.dracula:
@@ -95,9 +120,14 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                                             .choose(MimeType.ofImage())
                                             .theme(R.style.Matisse_Dracula)
                                             .countable(false)
+                                            .addFilter(new GifSizeFilter(320, 320, 5 * Filter.K * Filter.K))
                                             .maxSelectable(9)
+                                            .originalEnable(true)
+                                            .maxOriginalSize(10)
                                             .imageEngine(new PicassoEngine())
                                             .forResult(REQUEST_CODE_CHOOSE);
+                                    break;
+                                default:
                                     break;
                             }
                             mAdapter.setData(null, null);
@@ -124,6 +154,7 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {
             mAdapter.setData(Matisse.obtainResult(data), Matisse.obtainPathResult(data));
+            Log.e("OnActivityResult ", String.valueOf(Matisse.obtainOriginalState(data)));
         }
     }
 

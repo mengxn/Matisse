@@ -18,12 +18,12 @@ apply plugin: 'com.novoda.bintray-release'
 apply plugin: 'checkstyle'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.3"
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 26
+        targetSdkVersion 27
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -34,7 +34,7 @@ android {
     }
 }
 
-ext.supportLibVersion = '26.1.0'
+ext.supportLibVersion = '27.1.1'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -55,9 +55,13 @@ publish {
     userOrg = 'zhihu'
     groupId = 'com.zhihu.android'
     artifactId = 'matisse'
-    publishVersion = '0.5.0-beta3'
+    publishVersion = '0.5.1-beta1'
     desc = 'A well-designed local image selector for Android'
     website = 'https://www.zhihu.com/'
+}
+
+checkstyle {
+    toolVersion = '7.6.1'
 }
 
 task checkstyle(type:Checkstyle) {

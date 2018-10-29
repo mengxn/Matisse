@@ -34,7 +34,6 @@ import android.widget.Toast;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
-import com.zhihu.matisse.engine.impl.GlideEngine;
 import com.zhihu.matisse.engine.impl.PicassoEngine;
 import com.zhihu.matisse.filter.Filter;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
@@ -84,17 +83,15 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                                             .countable(true)
                                             .capture(true)
                                             .captureStrategy(
-                                                    new CaptureStrategy(true, "com.zhihu.matisse.sample.fileprovider"))
+                                                    new CaptureStrategy(true, "com.zhihu.matisse.sample.fileprovider","test"))
                                             .maxSelectable(9)
                                             .addFilter(new GifSizeFilter(320, 320, 5 * Filter.K * Filter.K))
                                             .gridExpectedSize(
                                                     getResources().getDimensionPixelSize(R.dimen.grid_expected_size))
                                             .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
                                             .thumbnailScale(0.85f)
-                                            // for glide-V3
-//                                            .imageEngine(new GlideEngine())
-                                            // for glide-V4
-                                            .imageEngine(new Glide4Engine())
+//                                            .imageEngine(new GlideEngine())  // for glide-V3
+                                            .imageEngine(new Glide4Engine())    // for glide-V4
                                             .setOnSelectedListener(new OnSelectedListener() {
                                                 @Override
                                                 public void onSelected(
@@ -106,6 +103,7 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                                             })
                                             .originalEnable(true)
                                             .maxOriginalSize(10)
+                                            .autoHideToolbarOnSingleTap(true)
                                             .setOnCheckedListener(new OnCheckedListener() {
                                                 @Override
                                                 public void onCheck(boolean isChecked) {
